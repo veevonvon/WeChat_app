@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	<meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+	<title>jq-app</title>
+	<link rel="stylesheet" type="text/css" href="./normalize.css">
+	<link rel="stylesheet" type="text/css" href="./buttons.css">
+	<link rel="stylesheet" type="text/css" href="./main.css?v=1">
+	<link rel="stylesheet" type="text/css" href="./animate.css">
+	<script type="text/javascript" src="./handlebars.min.js"></script>
+	<script type="text/javascript" src="./zepto.min.js"></script>
+</head>
+<body>
+<div class="header">
+	<h1></h1>
+</div>
+<div class="music">
+	<span class="music-btn" id="music-btn">
+		<img class="roting" src="./normalmusic.svg">
+	</span>
+	<audio src="./1.mp3" id="music" autoplay="autoplay" loop="loop"></audio>
+</div>
+<div class="init-page" id="init-page">
+	<div class="user-img">
+		<img src="http://www.baochouwang.com/d/file/p/2015-12-11/3afb3f425adcbf0cdf08688f6d20dd21.jpg">
+	</div>
+	<p class="user-content">敢测试你的财商程度吗？</p>
+	<div class="getin">
+		<span class="button button-3d button-action button-pill" id="initPage">马上参与测试</span>
+	</div>
+</div>
+<div class="final-page" id="final-page">
+	<div class="user-img">
+		<img src="http://www.baochouwang.com/d/file/p/2015-12-11/3afb3f425adcbf0cdf08688f6d20dd21.jpg">
+	</div>
+	<p id="resultText" class="user-content">你的财商程度超越了--persend--%的人</p>
+	<p id="resultMore" class="user-content">恭喜获得成就“不要脸” </p>
+	<img src="http://t10.baidu.com/it/u=587856168,202650167&fm=56">
+	<div class="">
+		<span class="button button-3d button-caution  button-pill" id="share">>参与众筹<</span>
+		<span class="button button-3d button-action button-pill" id="share">分享给朋友</span>
+	</div>
+</div>
+
+<div class="page-box" id="page-box"></div>
+	<script id="tpl" type="text/x-handlebars-template">
+	{{#each page}}
+		<div class="page-item" id="page-{{addOne @index}}">
+			<div class="page-head">
+			{{#each img}}
+				<img src="{{headimg}}">
+			{{/each}}
+			</div>
+			<div class="page-body">
+				<div class="question">
+					<p>{{_index}}.{{question}}</p>
+				</div>
+				<div class="chioce" id="chioce">
+					{{#each chioce}}
+					<div class="btn">
+						<span class="click-chioce button button-block button-3d button-action" data-chioce="{{chioce}}" parent-id-num="{{../_index}}">{{content}}</span>
+					</div>
+					{{/each}}
+				</div>
+			</div>
+		</div>
+	{{/each}}
+	</script>
+<div class="footer"></div>
+<div class="bg"></div>
+</body>
+<script type="text/javascript">
+	var handleHelper = Handlebars.registerHelper("addOne",function(index){
+		this._index = index+1;
+		return this._index;
+	});
+	var handleHelper = Handlebars.registerHelper("at",function(index){
+		if(index === 0){
+			return "button-action"
+		}else if(index ===1){
+			return "button-primary"
+		}else if(index === 2){
+			return "button-royal"
+		}else{
+			return "button-caution"
+		}
+	});
+//与showPage相关
+	var data = {};
+	data.page=[
+		{
+			img:[{headimg:"./page1.jpg"}],
+			question:"我喜欢刺激的休闲活动，例如高空弹跳、激流泛舟?",
+			chioce:[
+					{content:"是",chioce:10},
+					{content:"有时",chioce:6},
+					{content:"不会",chioce:2}
+				]
+		},
+		{
+			img:[{headimg:"./page1.jpg"}],
+			question:"朋友急于向我借钱，基于交情，我一定会设法帮助他?",
+			chioce:[
+					{content:"是",chioce:9},
+					{content:"有可能",chioce:5},
+					{content:"不会",chioce:2}
+				]
+		},
+		{
+			img:[{headimg:"./page1.jpg"}],
+			question:"虽然我对股市不是很熟悉，但是有可靠消息透露某只股票即将有主力介入炒作，我会考虑投入全部存款购买",
+			chioce:[
+					{content:"是",chioce:2},
+					{content:"有时",chioce:5},
+					{content:"不会",chioce:10}
+				]
+		},
+		{
+			img:[{headimg:"./page1.jpg"}],
+			question:"我喜欢运用不同的理财工具，例如股票、基金或是期货来投资。当行情看涨时，我也会利用借款来扩张我的额度。",
+			chioce:[
+					{content:"是",chioce:10},
+					{content:"有时",chioce:5},
+					{content:"不会",chioce:2}
+				]
+		},
+		{
+			img:[{headimg:"./page1.jpg"}],
+			question:"拥有移动电话、BP机、家用电脑、空气清净机、健康俱乐部会员中的任何两项",
+			chioce:[
+					{content:"是",chioce:10},
+					{content:"有时",chioce:5},
+					{content:"不会",chioce:2}
+				]
+		}
+	]
+	var tpl = $("#tpl").html();
+	var template = Handlebars.compile(tpl);
+	var html = template(data);
+	$("#page-box").html(html);
+	$(".page-item").hide();
+	$("#final-page").hide();
+</script>
+<script type="text/javascript">
+var result = {};
+$("#music-btn").on("tap",function(){
+	var music = $("#music").get(0),
+	pause = music.paused,
+	musicBtn = $("#music-btn img");
+	if(pause){
+		musicBtn.addClass("roting");
+		music.play();
+	}else{
+		musicBtn.removeClass("roting");
+		music.pause();
+	}
+})
+$("#initPage").on("tap",function(){
+	showPage(1);
+	$("#init-page").hide()
+})
+$(".click-chioce").on("tap",function(){
+	var chioce = $(this).attr("data-chioce");
+	var parent = $(this).attr("parent-id-num");
+	var num = Number(parent) +1;
+	result[parent] = chioce;
+	showPage(num);
+})
+$("#share").on("tap",function(){
+
+})
+function showPage(idNum){
+	var animateArr = [["fadeInDown","fadeIn"],["fadeInDown","fadeIn"],["fadeInDown","fadeIn"]]
+//id format : "1","2"
+//与data.page相关
+ 	idNum = Number(idNum);
+	if(idNum>=1 && idNum <=data.page.length){
+		$("#page-"+(idNum-1)).hide();
+		$("#page-"+idNum).show().find(".page-body").addClass("fadeIn" + " animated").closest(".page-item").find(".page-head img").addClass("fadeInDown" + " animated");
+	}else if(idNum > data.page.length){
+		dealResult(result);
+		$("#page-"+(idNum-1)).hide();
+		$("#final-page").show();
+	}
+}
+function dealResult(r){
+	var num = 0;
+	for(var key in r){
+		num = Number(r[key])*2 + num;
+	}
+	$("#resultText").text($("#resultText").text().replace(/--persend--/,num));
+}
+</script>
+</html>
